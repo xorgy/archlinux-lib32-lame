@@ -5,7 +5,7 @@
 _pkgbasename=lame
 pkgname=lib32-"$_pkgbasename"
 pkgver=3.100
-pkgrel=2
+pkgrel=3
 pkgdesc='A high quality MPEG Audio Layer III (MP3) encoder (32 bit)'
 arch=('x86_64')
 url='http://lame.sourceforge.net/'
@@ -17,24 +17,25 @@ sha256sums=('ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e')
 
 build() {
     cd "${_pkgbasename}-${pkgver}"
-    
+
     export CC='gcc -m32'
     export CXX='g++ -m32'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
-    
+
     ./configure \
+        --host=i686-unknown-linux-gnu \
         --prefix='/usr' \
         --libdir='/usr/lib32' \
         --enable-shared='yes' \
         --enable-nasm
-    
+
     make
 }
 
 package() {
     cd "${_pkgbasename}-${pkgver}"
-    
+
     make DESTDIR="$pkgdir" install
-    
+
     rm -r "$pkgdir"/usr/{bin,include,share}
 }
